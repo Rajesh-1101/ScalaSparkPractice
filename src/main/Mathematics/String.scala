@@ -55,7 +55,7 @@ object Name{
     val name = capitalizeFirstLetter(readLine("Enter your name: "))
     println("Enter your age: ")
     val age = readInt()
-
+    val movie = readLine("What is your favorite movie of all times? ")
     println(Console.BOLD)
     print("Name: ")
     print(Console.UNDERLINED)
@@ -64,8 +64,8 @@ object Name{
     println(Console.BOLD)
     print("Age: ")
     print(Console.RESET)
-    print(age)
+    println(age)
+    println(s"$name, $movie is totally awesome!")
   }
 }
-
 
