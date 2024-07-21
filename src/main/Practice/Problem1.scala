@@ -4,7 +4,6 @@ Problem: Find stores that were opened in the second half of 2021 with more than 
 Schema :
 ======
 Table 1: instacart_reviews
-
 id: int
 customer_id : int
 store_id : int
