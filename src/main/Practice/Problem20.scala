@@ -2,7 +2,6 @@
 Problem20: The given file has a delimiter ~|. How will you load it as a spark DataFrame?
 
 Important: Instead of using sparkContext(sc), use sparkSession (spark).
-
 Name ~|Age
 Azarudeen, Shahul~|25
 Michel, Clarke ~|26
