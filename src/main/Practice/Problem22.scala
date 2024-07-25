@@ -3,7 +3,7 @@ Problem22: Given a dataset with columns PERSON, TYPE, and AGE,
 create an output where the oldest adult is paired with the youngest child,
 producing pairs of ADULT and CHILD while ensuring appropriate data matching.
 
-💡 Check out the input and output in the table below!
+Check out the input and output in the table below!
 
 Input:--->
 
