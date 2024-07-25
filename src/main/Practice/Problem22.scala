@@ -24,13 +24,12 @@ Expected Output:--->
 
 | ADULT | CHILD |
 | ----- | ----- |
-| A4 | C4 |
-| A5 | C2 |
-| A1 | C1 |
-| A2 | C3 |
-| A3 | NULL |
+|   A1|   C2|
+|   A2|   C3|
+|   A3| NULL|
+|   A4|   C4|
+|   A5|   C1|
 */
-
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.expressions.Window
 import org.apache.spark.sql.functions._
@@ -44,6 +43,7 @@ object Problem22 {
 
     import spark.implicits._
 
+    // Sample data
     val data = Seq(
       ("A1", "ADULT", 54),
       ("A2", "ADULT", 53),
@@ -56,24 +56,28 @@ object Problem22 {
       ("C4", "CHILD", 15)
     )
 
+    // Create DataFrame
     val dataDF = data.toDF("Person", "Type", "Age")
     dataDF.show()
 
+    // Rank adults by descending age
     val windowSpecAdult = Window.partitionBy("Type").orderBy(desc("Age"))
     val adultRankedDF = dataDF.filter($"Type" === "ADULT")
-      .withColumn("rank", rank().over(windowSpecAdult))
-      .select($"Person".alias("ADULT"), $"Age",  $"rank")
+      .withColumn("rank", row_number().over(windowSpecAdult))
+      .select($"Person".alias("ADULT"), $"Age", $"rank")
     adultRankedDF.show()
 
+    // Rank children by ascending age
     val windowSpecChild = Window.partitionBy("Type").orderBy("Age")
     val childRankedDF = dataDF.filter($"Type" === "CHILD")
-      .withColumn("rank", rank().over(windowSpecChild))
+      .withColumn("rank", row_number().over(windowSpecChild))
       .select($"Person".alias("CHILD"), $"Age", $"rank")
     childRankedDF.show()
 
+    // Join adultRankedDF with childRankedDF based on their ranks
     val resultDF = adultRankedDF.join(childRankedDF, Seq("rank"), "left")
-      .orderBy($"ADULT".asc_nulls_last)
       .select($"ADULT", $"CHILD")
+      .orderBy($"ADULT".asc_nulls_last)
 
     resultDF.show()
 
