@@ -1,5 +1,5 @@
 /*
-Problem23: Write a solution to display the records with three or more rows with
+Problem22: Write a solution to display the records with three or more rows with
 consecutive IDs, and the number of people is greater than or equal to 100 for each.
 Return the result table ordered by visit_date in ascending order.
 
@@ -52,11 +52,16 @@ import org.apache.spark.sql.functions._
 import org.apache.spark.sql.expressions.Window
 
 object Problem23 {
-  def getData(spark: SparkSession): DataFrame = {
+  def main(args: Array[String]): Unit = {
+    val spark = SparkSession.builder()
+      .appName("Problem23")
+      .master("local[*]")
+      .getOrCreate()
+
     import spark.implicits._
 
     // Sample data
-    val data = Seq(
+    val dataDF = Seq(
       (1, "2017-01-01", 10),
       (2, "2017-01-02", 109),
       (3, "2017-01-03", 150),
@@ -66,49 +71,31 @@ object Problem23 {
       (7, "2017-01-07", 199),
       (8, "2017-01-09", 188)
     ).toDF("id", "visit_date", "people")
+    dataDF.show()
 
-    data
-  }
-
-  def getResult(inputDf: DataFrame): DataFrame = {
-    import inputDf.sparkSession.implicits._
-
-    // Define a window specification ordered by id
+  // Define a window specification ordered by id
     val windowSpec = Window.orderBy("id")
 
     // Filter df where people >= 100
-    val filteredDf = inputDf.filter($"people" >= 100)
+    val filteredDf = dataDF.filter($"people" >= 100)
       .withColumn("rnum", row_number().over(windowSpec))
       .withColumn("diff", $"id" - $"rnum")
+    filteredDf.show()
 
     // Grouping the data based on diff and counting occurrences
     val groupedDf = filteredDf.groupBy("diff").count()
 
     // Join filtered DataFrame with grouped results
     val joinedDf = filteredDf.join(groupedDf, Seq("diff"), "inner")
+    joinedDf.show()
 
     // Filter where count of diff >= 3 (i.e., at least 3 consecutive ids)
     val resultDf = joinedDf.filter($"count" >= 3)
       .drop("diff")
       .drop("rnum")
       .drop("count")
+      .orderBy("id")
 
-    // Order by id
-    resultDf.orderBy("id")
-  }
-
-  def main(args: Array[String]): Unit = {
-    val spark = SparkSession.builder()
-      .appName("Problem23")
-      .master("local[*]")
-      .getOrCreate()
-
-    import spark.implicits._
-
-    val dataDf = getData(spark)
-
-    // Get result DataFrame
-    val resultDf = getResult(dataDf)
     resultDf.show()
 
     spark.stop()
