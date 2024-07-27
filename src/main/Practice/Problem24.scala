@@ -5,6 +5,7 @@ There are two ways to handle row duplication in data frames. The distinct() func
 in spark is used to drop/remove duplicate rows (all columns) from a DataFrame,
 while dropDuplicates() is used to drop rows based on one or more columns.
 */
+
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.expressions.Window
