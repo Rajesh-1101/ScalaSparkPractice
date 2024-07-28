@@ -22,12 +22,11 @@ object Problem25 {
   def main(args: Array[String]): Unit = {
     val spark = SparkSession.builder()
       .appName("Problem 25")
-      .master("local[*]")  // Use all available cores
+      .master("local[*]")  
       .getOrCreate()
 
     import spark.implicits._
 
-    // Sample data
     val data = Seq(
       ("James", "", "Smith", "36636", "M", 3000),
       ("Michael", "Rose", "", "40288", "M", 4000),
@@ -36,7 +35,6 @@ object Problem25 {
       ("Jen", "Mary", "Brown", "", "F", -1)
     )
 
-    // Define schema
     val schema = StructType(Array(
       StructField("first_name", StringType, nullable = true),
       StructField("middle_name", StringType, nullable = true),
@@ -46,16 +44,13 @@ object Problem25 {
       StructField("salary", IntegerType, nullable = true)
     ))
 
-    // Convert tuples to Row objects
     val rowRDD = spark.sparkContext.parallelize(data.map {
       case (first_name, middle_name, last_name, id, gender, salary) =>
         Row(first_name, middle_name, last_name, id, gender, salary)
     })
 
-    // Create DataFrame with schema
     val dataDF = spark.createDataFrame(rowRDD, schema)
 
-    // Show DataFrame
     dataDF.show()
   }
 }
