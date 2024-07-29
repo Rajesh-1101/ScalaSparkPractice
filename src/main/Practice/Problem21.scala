@@ -1,5 +1,6 @@
 /*
 Problem21: Find the origin and the destination of each customer.
+
 Note: If there is a discontinuity in the flight's origin & destination,
 it will be a new route (example cust_id 4).
 
