@@ -8,6 +8,7 @@ Here’s how to create a MapType with scala Spark StructType and StructField. Th
 StructType() accepts a list of StructFields, each of which takes a field name and a value
 type.
 */
+
 import org.apache.spark.sql.{SparkSession, Row}
 import org.apache.spark.sql.types._
 
